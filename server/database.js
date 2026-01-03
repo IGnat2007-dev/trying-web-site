@@ -1,52 +1,41 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
-const dbPath = path.join(__dirname, '../database.sqlite');
-const db = new sqlite3.Database(dbPath);
-
-// Инициализация таблицы
-db.serialize(() => {
-    db.run(`
-        CREATE TABLE IF NOT EXISTS users (
-            identifier TEXT PRIMARY KEY,
-            attemptsRemaining INTEGER,
-            lastAttemptTime INTEGER,
-            lockedUntil INTEGER,
-            isAuthorized INTEGER DEFAULT 0  -- ДОБАВЛЯЕМ ЭТУ КОЛОНКУ (0 - ложь, 1 - истина)
-        )
-    `);
-});
+// Настройка клиента Supabase
+// На сервере Render мы будем брать эти данные из переменных окружения
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Функция получения состояния
-function getUserState(identifier) {
-    return new Promise((resolve, reject) => {
-        db.get("SELECT * FROM users WHERE identifier = ?", [identifier], (err, row) => {
-            if (err) reject(err);
-            else {
-                if (row) {
-                    // Превращаем 0/1 из базы обратно в false/true для JS
-                    row.isAuthorized = !!row.isAuthorized;
-                }
-                resolve(row);
-            }
-        });
-    });
+async function getUserState(identifier) {
+    const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('identifier', identifier)
+        .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 значит "запись не найдена"
+        console.error("Ошибка Supabase (get):", error);
+        return null;
+    }
+    return data; // Возвращает объект пользователя или null
 }
 
 // Функция сохранения состояния
-function setUserState(identifier, state) {
-    return new Promise((resolve, reject) => {
-        const { attemptsRemaining, lastAttemptTime, lockedUntil, isAuthorized } = state;
-        db.run(
-            `INSERT OR REPLACE INTO users (identifier, attemptsRemaining, lastAttemptTime, lockedUntil, isAuthorized) 
-             VALUES (?, ?, ?, ?, ?)`,
-            [identifier, attemptsRemaining, lastAttemptTime, lockedUntil, isAuthorized ? 1 : 0], // Сохраняем как 1 или 0
-            (err) => {
-                if (err) reject(err);
-                else resolve();
-            }
-        );
-    });
+async function setUserState(identifier, state) {
+    const { error } = await supabase
+        .from('users')
+        .upsert({ 
+            identifier: identifier,
+            attempts_remaining: state.attemptsRemaining,
+            last_attempt_time: state.lastAttemptTime,
+            locked_until: state.lockedUntil,
+            is_authorized: state.isAuthorized
+        });
+
+    if (error) {
+        console.error("Ошибка Supabase (set):", error);
+    }
 }
 
 module.exports = { getUserState, setUserState };
