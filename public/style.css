@@ -1,0 +1,90 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Чтобы модальное окно могло центрироваться */
+}
+
+/* Оверлей (полностью затемненный фон) */
+#namePromptOverlay {
+    position: fixed; /* Фиксированное положение */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный черный фон */
+    display: flex; /* Используем flex для центрирования содержимого */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Высокий z-index, чтобы быть поверх всего */
+}
+
+/* Контейнер для самого окна ввода */
+#namePromptBox {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 90%; /* Ширина на мобильных */
+    max-width: 400px; /* Максимальная ширина */
+}
+
+#namePromptBox h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+#namePromptBox p {
+    color: #555;
+    font-size: 0.9em;
+}
+
+#namePromptBox input[type="text"] {
+    width: calc(100% - 20px); /* Учитываем padding */
+    padding: 10px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+#namePromptBox button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+#namePromptBox button:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Класс для скрытия контента */
+.hidden {
+    display: none !important; /* !important для переопределения других стилей, если нужно */
+}
+
+/* Стили для контента сайта */
+#siteContent {
+    padding: 20px;
+    text-align: center;
+}
+
+#siteContent h1 {
+    color: #007bff;
+}
