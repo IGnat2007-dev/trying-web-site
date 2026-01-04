@@ -1,9 +1,21 @@
+const path=require('path');
+
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
 const { createClient } = require('@supabase/supabase-js');
 
-// Настройка клиента Supabase
-// На сервере Render мы будем брать эти данные из переменных окружения
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
+
+console.log("--- Отладка ключей ---");
+console.log("Текущая папка:", __dirname);
+console.log("URL из env:", supabaseUrl ? "Найден" : "ПУСТО");
+console.log("----------------------");
+
+if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Supabase ключи не найдены. Проверьте файл .env в корне проекта.");
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Функция получения состояния
