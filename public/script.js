@@ -58,6 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
     async function checkName() {
         const enteredName = creatorNameInput.value.trim();
 
+        const savedName = localStorage.getItem('userName');
+
+    if (savedName) {
+        // Если имя нашли, сразу подставляем его в поле и пишем приветствие
+        input.value = savedName;
+        statusText.innerText = `С возвращением, ${savedName}!`;
+        // Здесь можно автоматически вызвать функцию проверки, если нужно
+        revealSite()
+    }
+
         // Проверяем, если кнопка заблокирована
         if (submitNameBtn.disabled) {
             return;

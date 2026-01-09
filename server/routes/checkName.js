@@ -40,6 +40,8 @@ router.post('/', async (req, res) => {
             userState.attemptsRemaining = config.MAX_ATTEMPTS;
             await setUserState(identifier, userState);
             res.json({ success: true, state: userState });
+
+            localStorage.setItem('userName', identifier);
         } else {
             userState.attemptsRemaining = Math.max(0, userState.attemptsRemaining - 1);
             if (userState.attemptsRemaining === 0) {
