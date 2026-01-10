@@ -3,25 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Govnosite</title>
+    <title>Доступ к системе</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="namePromptOverlay">
-        <div id="namePromptBox">
-            <h2>Введите истинное имя создателя сайта:</h2>
-            <p>У вас осталось <span id="attemptsLeft">?</span> попыток.</p>
-            <input type="text" id="creatorNameInput" placeholder="Имя">
-            <button id="submitNameBtn">Проверить</button>
-            <p id="errorMessage" class="error"></p>
-        </div>
-    </div>
 
-    <div id="siteContent" class="hidden">
-        <h1>Добро пожаловать на секретный сайт!</h1>
-        <p>Вы успешно прошли проверку!</p>
-        <p>Здесь вы можете увидеть много интересного...</p>
-        <!-- Ваш основной контент сайта -->
+    <div class="auth-container">
+        <!-- ШАГ 1: Проверка секретного кода -->
+        <div id="step-gate" class="auth-card">
+            <h1>🔐 Вход только для своих</h1>
+            <p>Введите секретный код создателя, чтобы продолжить:</p>
+            <div class="input-group">
+                <input type="text" id="secretInput" placeholder="Секретный код...">
+                <button id="btnVerify">Проверить</button>
+            </div>
+            <p id="gate-error" class="error"></p>
+        </div>
+
+        <!-- ШАГ 2: Регистрация (с уникальным логином) -->
+        <div id="step-register" class="auth-card hidden">
+            <h1>📝 Создание аккаунта</h1>
+            <p>Код верный! Придумайте уникальный логин и пароль.</p>
+            <div class="input-group">
+                <!-- Уникальный логин (никнейм) -->
+                <input type="text" id="regUsername" placeholder="Придумайте логин (например, ignat_2024)" required>
+                <!-- Почта -->
+                <input type="email" id="regEmail" placeholder="Ваш Email" required>
+                <!-- Пароль -->
+                <input type="password" id="regPassword" placeholder="Придумайте пароль" required>
+                
+                <button id="btnRegister">Зарегистрироваться</button>
+            </div>
+            <p id="reg-error" class="error"></p>
+        </div>
+
     </div>
 
     <script src="script.js"></script>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приватный контент</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-card" style="max-width: 800px;">
+        <h1>🎉 Добро пожаловать в систему!</h1>
+        <p>Эта страница доступна только авторизованным пользователям.</p>
+        
+        <div id="private-data" style="text-align: left; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+            <h3>Твои данные:</h3>
+            <p>Статус: 🟢 Доступ разрешен</p>
+            <p>Секретный контент: [Здесь могут быть ваши ссылки, фото или токены]</p>
+        </div>
+
+        <button id="btnLogout" style="margin-top: 20px; background: #ff4d4d;">Выйти из системы</button>
+    </div>
+
+    <script>
+        // Логика выхода
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            // Удаляем куку (простой способ через истечение даты)
+            document.cookie = "sb-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>
