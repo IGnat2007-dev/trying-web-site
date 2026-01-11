@@ -1,57 +1,77 @@
-// Элементы управления
-const gateCard = document.getElementById('step-gate');
-const regCard = document.getElementById('step-register');
-const secretInput = document.getElementById('secretInput');
-const gateError = document.getElementById('gate-error');
-
-// 1. Проверка секретного кода
-document.getElementById('btnVerify').addEventListener('click', async () => {
-    const secret = secretInput.value.trim();
+async function verifyCode() {
+    console.log("Кнопка нажата, функция verifyCode запущена"); // Лог для браузера
+    
+    const secretInput = document.getElementById('secretInput');
+    if (!secretInput) {
+        console.error("Поле secretInput не найдено!");
+        return;
+    }
+    
+    const secret = secretInput.value;
 
     try {
-        const response = await fetch('/api/verify-creator', {
+        const res = await fetch('/api/verify-creator', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ secret })
         });
 
-        const data = await response.json();
+        const data = await res.json();
+        console.log("Ответ от сервера:", data); // Лог ответа
 
         if (data.success) {
-            // Если код верный, переключаем форму
-            gateCard.classList.add('hidden');
-            regCard.classList.remove('hidden');
+            document.getElementById('step-gate').classList.add('hidden');
+            document.getElementById('step-register').classList.remove('hidden');
         } else {
-            gateError.textContent = data.message || "Неверный код доступа";
+            document.getElementById('gate-error').innerText = data.message;
         }
     } catch (e) {
-        gateError.textContent = "Ошибка связи с сервером";
+        console.error("Ошибка при запросе:", e);
+        alert("Произошла ошибка при связи с сервером. Проверьте консоль (F12)");
     }
-});
+}
 
-// 2. Регистрация
-document.getElementById('btnRegister').addEventListener('click', async () => {
+async function register() {
     const username = document.getElementById('regUsername').value;
     const email = document.getElementById('regEmail').value;
     const password = document.getElementById('regPassword').value;
-    const regError = document.getElementById('reg-error');
-
-    try {
-        const response = await fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, password })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            // Если регистрация успешна, переходим на страницу с контентом
-            window.location.href = '/content.html';
-        } else {
-            regError.textContent = data.error || "Ошибка регистрации";
-        }
-    } catch (e) {
-        regError.textContent = "Ошибка при регистрации";
+    
+    const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ username, email, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+        window.location.href = '/content.html';
+    } else {
+        document.getElementById('reg-error').innerText = data.error;
     }
-});
+}
+
+function showLogin() {
+    document.getElementById('step-register').classList.add('hidden');
+    document.getElementById('step-login').classList.remove('hidden');
+}
+
+function showRegister() {
+    document.getElementById('step-login').classList.add('hidden');
+    document.getElementById('step-register').classList.remove('hidden');
+}
+
+async function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+        window.location.href = '/content.html';
+    } else {
+        document.getElementById('login-error').innerText = data.error;
+    }
+}

@@ -2,43 +2,45 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Доступ к системе</title>
+    <title>Вход в систему</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="auth-container">
-        <!-- ШАГ 1: Проверка секретного кода -->
+        <!-- ШАГ 1 -->
         <div id="step-gate" class="auth-card">
-            <h1>🔐 Вход только для своих</h1>
-            <p>Введите секретный код создателя, чтобы продолжить:</p>
-            <div class="input-group">
-                <input type="text" id="secretInput" placeholder="Секретный код...">
-                <button id="btnVerify">Проверить</button>
-            </div>
+            <h1>🔐 Доступ</h1>
+            <input type="text" id="secretInput" placeholder="Введите секретный код">
+               <button onclick="verifyCode()">Проверить</button>
             <p id="gate-error" class="error"></p>
         </div>
-
-        <!-- ШАГ 2: Регистрация (с уникальным логином) -->
+        <!-- ШАГ 2 -->
         <div id="step-register" class="auth-card hidden">
-            <h1>📝 Создание аккаунта</h1>
-            <p>Код верный! Придумайте уникальный логин и пароль.</p>
-            <div class="input-group">
-                <!-- Уникальный логин (никнейм) -->
-                <input type="text" id="regUsername" placeholder="Придумайте логин (например, ignat_2024)" required>
-                <!-- Почта -->
-                <input type="email" id="regEmail" placeholder="Ваш Email" required>
-                <!-- Пароль -->
-                <input type="password" id="regPassword" placeholder="Придумайте пароль" required>
-                
-                <button id="btnRegister">Зарегистрироваться</button>
-            </div>
+            <h1>📝 Регистрация</h1>
+            <input type="text" id="regUsername" placeholder="Уникальный логин">
+            <input type="email" id="regEmail" placeholder="Email">
+            <input type="password" id="regPassword" placeholder="Пароль">
+            <button onclick="register()">Создать аккаунт</button>
+            <p style="margin-top: 15px; font-size: 12px;">
+            Уже есть аккаунт? <a href="#" onclick="showLogin()">Войти</a>
+            </p>
             <p id="reg-error" class="error"></p>
         </div>
-
+        <!--Spep 3 -->
+            <div id="step-login" class="auth-card hidden">
+            <h1>🔑 Вход</h1>
+            <div class="input-group">
+            <input type="email" id="loginEmail" placeholder="Email">
+            <input type="password" id="loginPassword" placeholder="Пароль">
+            <button onclick="login()">Войти</button>
+           </div>
+            <p id="login-error" class="error"></p>
+            <p style="margin-top: 15px; font-size: 12px;">
+            Нет аккаунта? <a href="#" onclick="showRegister()">Регистрация</a>
+            </p>
+        </div>
+        
     </div>
-
-    <script src="script.js"></script>
+        <script src="script.js"></script>
 </body>
 </html>

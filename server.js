@@ -8,88 +8,107 @@ const app = express();
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 app.use(express.json());
-app.use(cookieParser()); // Позволяет серверу читать куки
+app.use(cookieParser());
+
+app.get('/', (req, res) => {
+    const token = req.cookies['sb-access-token'];
+    if (token) {
+        // Если кука есть, сразу отправляем на контент
+        return res.redirect('/content.html');
+    }
+    // Если куки нет, отдаем обычный index.html
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- MIDDLEWARE ДЛЯ ЗАЩИТЫ СТРАНИЦ ---
+// Защита страницы контента
 const protectRoute = (req, res, next) => {
     const token = req.cookies['sb-access-token'];
-    
-    if (!token) {
-        // Если токена нет, а пользователь хочет на content.html — выкидываем на главную
-        if (req.path === '/content.html') {
-            return res.redirect('/');
-        }
+    if (!token && req.path === '/content.html') {
+        return res.redirect('/');
     }
     next();
 };
 
-// --- РОУТЫ ---
-
-// 1. Проверка секретного кода (до регистрации)
-app.post('/api/verify-creator', (req, res) => {
+// 1. Проверка секретного кода
+app.post('/api/verify-creator', (req, res) => { 
     const { secret } = req.body;
-    const CORRECT_CODE = process.env.SECRET_CODE || "12345"; // Сверям с .env
-
-    if (secret === CORRECT_CODE) {
+    console.log("Получен запрос на проверку кода:", secret); // Лог для отладки
+    
+    if (secret === process.env.SECRET_CODE) {
+        console.log("Код верный!");
         res.json({ success: true });
     } else {
-        res.status(403).json({ success: false, message: "Код неверный. Доступ запрещен." });
+        console.log("Код неверный!");
+        res.status(403).json({ success: false, message: "Неверный код доступа" });
     }
 });
 
-// 2. Регистрация в Supabase
+// 2. Регистрация
 app.post('/api/register', async (req, res) => {
     const { email, password, username } = req.body;
 
-    // 1. Регистрируем пользователя в Supabase Auth
+    console.log("Попытка регистрации:", email, username);
+
+    // 1. Регистрация в Auth. 
+    // Мы передаем username в options.data, чтобы триггер в базе его подхватил!
     const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            data: {
+                username: username // Эти данные попадут в raw_user_meta_data
+            }
+        }
+    });
+
+    app.post('/api/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
     });
 
-    if (authError) {
-        return res.status(400).json({ success: false, error: authError.message });
+    if (error) {
+        return res.status(400).json({ success: false, error: error.message });
     }
 
-    if (authData.user) {
-        // 2. Если Auth прошел успешно, записываем логин в таблицу profiles
-        const { error: profileError } = await supabase
-            .from('profiles')
-            .insert([
-                { 
-                    id: authData.user.id, 
-                    username: username, 
-                    email: email 
-                }
-            ]);
-
-        if (profileError) {
-            // Если логин уже занят, профиль не создастся (сработает unique в БД)
-            return res.status(400).json({ 
-                success: false, 
-                error: "Этот логин уже занят другим пользователем." 
-            });
-        }
-
-        // 3. Ставим куку сессии
-        if (authData.session) {
-            res.cookie('sb-access-token', authData.session.access_token, {
-                httpOnly: false,
-                maxAge: 86400 * 1000
-            });
-        }
+    if (data.session) {
+        res.cookie('sb-access-token', data.session.access_token, {
+            httpOnly: false,
+            maxAge: 86400 * 1000
+        });
     }
 
     res.json({ success: true });
 });
 
-// Применяем защиту к странице контента
+
+    if (authError) {
+        console.error("ОШИБКА AUTH:", authError.message);
+        return res.status(400).json({ success: false, error: authError.message });
+    }
+
+    // ТЕПЕРЬ НЕ НУЖНО делать supabase.from('profiles').insert(...)
+    // Триггер в базе данных уже всё сделал сам!
+
+    if (authData.session) {
+        res.cookie('sb-access-token', authData.session.access_token, {
+            httpOnly: false,
+            maxAge: 86400 * 1000
+        });
+    }
+
+    res.json({ success: true });
+});
+
+
 app.get('/content.html', protectRoute, (req, res) => {
     res.sendFile(path.join(__dirname, 'public/content.html'));
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Сервер запущен: http://localhost:${PORT}`);
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Сервер запущен: http://localhost:${process.env.PORT || 3000}`);
 });
