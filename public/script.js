@@ -1,6 +1,5 @@
 async function verifyCode() {
-    console.log("Кнопка нажата, функция verifyCode запущена"); // Лог для браузера
-    
+
     const secretInput = document.getElementById('secretInput');
     if (!secretInput) {
         console.error("Поле secretInput не найдено!");
@@ -36,6 +35,7 @@ async function register() {
     const email = document.getElementById('regEmail').value;
     const password = document.getElementById('regPassword').value;
     
+    try{    
     const res = await fetch('/api/register', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -47,6 +47,9 @@ async function register() {
     } else {
         document.getElementById('reg-error').innerText = data.error;
     }
+}catch (e){
+    console.error('Ошибка получения или отправки данных на/с сервер: ',e)
+}
 }
 
 function showLogin() {
@@ -63,6 +66,7 @@ async function login() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     
+    try{
     const res = await fetch('/api/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -74,4 +78,9 @@ async function login() {
     } else {
         document.getElementById('login-error').innerText = data.error;
     }
+    }catch(e){
+
+        console.error("Не полуилось отправить/получить данные с/на сервер")
+    }
+    
 }
