@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контент</title>
+    <link rel="stylesheet" href="../home-page/home.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" title="Freedom Always Questions"><a href="#">FA Q</a></div>
+        <ul class="nav-links">
+            <li><a href="../games-page/games.html">Games</a></li>
+            <li><a href="#">Edits</a></li>
+            <li><a href="#">Contacts</a></li>            
+        </ul>
+        <div class="auth-group">
+            <a href="#">Sign in</a> / <a href="#">sign up</a>
+        </div>
+    </nav>
+    <header class="hero">
+        <div class="hero-content">
+        <div class="text-wrapper">
+            <h1 id="welcomeText">Welcomeniggas</h1>
+        </div>
+        <div class="text-wrapper">
+            <h2 class="hidden" id="discText">Here You Can Whatch my work</h2>
+        </div>
+        <div class="text-wrapper"><h3 id="navText"></h3></div>
+        </div>
+
+        <div id="appointment">
+            <p>This site was created just for store and pablish my wasted time,you're unlikly to find something good here</p>            
+        </div>
+    </header>
+
+    <div class='hidden' id="content">
+            <div class="content-information">
+            <h3>What is the joke of my little projects,and why should you waste your time on them?</h3>
+            <p>Honestly, I don't even know, maybe you want to help me or you're interested in something, if not and you're still reading it, then you're just wasting your time, seriously, why have you finished reading so far?</p>
+            <h4>You'll never get that time back,as me</h4>
+        </div>
+    </div>
+
+    <section class=""></section>
+
+    <script src="../home-page/home.js">
+        function logout() {
+            document.cookie = "sb-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

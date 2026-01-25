@@ -1,0 +1,239 @@
+*{
+    box-sizing:border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+:root{
+    --button-color:#333333;
+    --default-text:#000000;
+    --text-light:#ffffff;
+    --secondary-text:#424040;
+    --text-animation:#3a6ad1;
+    --transition-speed:1s;
+}
+body{
+    background-image:radial-gradient(circle at center,#333 2px,transparent 2px);
+    background-size: 24px 24px;
+    background-color:#fff;
+
+    margin:0;
+    padding:0;
+    min-height:100vh;
+}
+
+/* #drawingCanvas{
+    position:fixed;
+    top: 0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:auto;
+    z-index:1100;
+} */
+
+.navbar{
+    display: flex;
+    position:sticky;
+    top:0;
+    justify-content:space-between;
+    align-items: center;
+    padding: 20px 50px;
+    z-index:200;
+    background: white;
+}
+
+.logo{
+    font-size:30px;
+    font-weight:bold;
+    cursor: pointer;
+}
+.logo a{
+    color:var(--default-text);
+    transition:0.3s;
+    text-decoration:none;
+}
+.logo a:hover{
+    color:var(--text-animation);
+    transition:0.3s;
+}
+
+.nav-links{
+    display: flex;
+    list-style:none;
+    gap:30px;
+}
+.nav-links a{
+    text-decoration: none;
+    color:var(--default-text);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size:14px;
+    transition:0.3s;
+}
+.nav-links a:hover{
+    color:var(--text-animation);
+    transition:0.3s;
+}
+
+.auth-group a{
+    font-size:20px;
+    color:var(--default-text);
+    text-decoration: none;
+    transition:0.4s;
+    cursor: pointer;
+}
+.auth-group a:hover{
+    color:var(--text-animation);
+    transition:0.4s;
+}
+
+.hero{
+    position: relative;
+    height: 90vh;
+    background:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)),url('../../images/live-background1/unzoom.jpg') center/cover no-repeat;
+    display:flex;
+    align-items: center;
+    justify-content:center;
+    text-align:center;
+    color:var(--text-light);
+    overflow: hidden;
+}
+.hero-content{
+    display:flex;
+    flex-direction:column;
+    gap:15;
+}
+.text-wrapper {
+    /* Убираем жесткую высоту ,даем контенту дышать */
+    min-height:40px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Если текст по центру */
+}
+#welcomeText, .hidden{
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+    opacity var(--transition-speed)ease-out,
+    transform var(--transition-speed) ease-out;
+    pointer-events: none;
+}
+#welcomeText.visible, .hidden.visible{
+    opacity:1;
+    transform:translateY(0);
+    /* transition:
+    transform 1s ease-out; */
+}
+#welcomeText{
+    font-size:clamp(2rem,5vw,3rem);
+    letter-spacing: 3px;
+    margin:0;
+}
+#navText{
+    margin:0;
+    line-height:40px;
+}
+.hero-content h2,h3{
+    font-size:clamp(1.2rem,3vw,1.8rem);
+    font-weight:300;
+}
+#appointment{
+    position:absolute;
+    background-color:white;
+    align-self: flex-end;
+    bottom:50px;
+    right:50px;
+    text-align:left;
+    opacity:0;
+    transform:translateY(30px);
+    transition:all var(--transition-speed) ease;
+}
+#appointment.visible{
+    opacity: 0.7;
+    transform:translateY(0);
+}
+#appointment p{
+    display:flex;
+    color:black;
+    max-width: 300px;
+    max-height:200px;
+    font-size:1rem;
+    line-height:1.5;
+    padding:50px 40px 50px 40px;
+}
+@media (max-width: 768px) {
+    #appointment {
+        position: static; /* Возвращаем в поток */
+        margin-top: 20px;
+        padding: 0 20px;
+        text-align: center;
+        max-width: 100%;
+    }
+    .hero {
+        flex-direction: column; /* Чтобы блоки шли друг за другом вниз */
+    }
+}
+
+#content {
+    /* Вместо absolute используем отступы */
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 20px;
+    margin-right: auto; 
+    padding: 20px 0px 10px 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    /* Адаптивная ширина */
+    max-width: 600px;
+    width: 90%; 
+    
+    /* Убираем фиксированную высоту, чтобы текст не вылезал при сжатии */
+    min-height: 300px; 
+    
+    text-align: justify;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Немного объема */
+}
+
+.content-information {
+    /* Контейнер внутри не должен быть шире родителя */
+    max-width: 500px;
+    margin: 0 auto 10px 10px;
+}
+
+/* Группировка шрифтов */
+#content p, 
+#content h3,
+#content h4 {
+    font-family: sans-serif; /* Исправлена запятая */
+    color: var(--default-text, #333);
+}
+
+#content h3 {
+    font-size: 1.5rem; /* Использование rem лучше для доступности */
+    margin-bottom: 100px; /* Вместо больших padding используйте margin */
+    line-height: 1.2;
+}
+
+#content p {
+    font-size: 14px;
+    margin: 20px 0;
+    font-weight: 500;
+    line-height: 1.6; /* Добавьте межстрочный интервал для читаемости */
+}
+
+.hidden{
+    opacity:0;
+    transform:translateY(30px);
+    transition:all var(--transition-speed) ease;
+    pointer-events: none;
+}
+
+.visible{
+    transform:translateY(0);
+    opacity:1;
+    transition:
+    opacity var(--transition-speed) ease-out,
+    visibility var(--transition-speed);
+    pointer-events: auto;
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <link rel="stylesheet" href="/pages/register-page/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- ШАГ 1 -->
+        <div id="step-gate" class="auth-card">
+            <h1>🔐 Enter code to view content</h1>
+            <input type="text" id="secretInput" placeholder="Enter code">
+               <button onclick="verifyCode()">Проверить</button>
+            <p id="gate-error" class="error"></p>
+        </div>
+        <!-- ШАГ 2 -->
+        <div id="step-register" class="auth-card hidden">
+            <h1>📝 Регистрация</h1>
+            <input type="text" id="regUsername" placeholder="Уникальный логин">
+            <input type="email" id="regEmail" placeholder="Email">
+            <input type="password" id="regPassword" placeholder="Пароль">
+            <button onclick="register()">Создать аккаунт</button>
+            <p style="margin-top: 15px; font-size: 14px;">
+            Уже есть аккаунт? <a href="#" onclick="showLogin()">Войти</a>
+            </p>
+            <p id="reg-error" class="error"></p>
+        </div>
+        <!--Spep 3 -->
+            <div id="step-login" class="auth-card hidden">
+            <h1>🔑 Вход</h1>
+            <div class="input-group">
+            <input type="email" id="loginEmail" placeholder="Email">
+            <input type="password" id="loginPassword" placeholder="Пароль">
+            <button onclick="login()">Войти</button>
+           </div>
+            <p id="login-error" class="error"></p>
+            <p style="margin-top: 15px; font-size: 12px;">
+            Нет аккаунта? <a href="#" onclick="showRegister()">Регистрация</a>
+            </p>
+        </div>
+        
+    </div>
+        <script src="/pages/register-page/script.js"></script>
+</body>
+</html>
